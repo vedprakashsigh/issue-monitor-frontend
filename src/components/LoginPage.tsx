@@ -11,7 +11,8 @@ import {
 } from "@chakra-ui/react";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
-import { setCurrentUser } from "../utils/authUtils"; // Import setCurrentUser utility
+import { setToken } from "../utils/authUtils"; // Import setCurrentUser utility
+import config from "../config";
 
 const schema = z.object({
   username: z.string().min(4),
@@ -19,17 +20,18 @@ const schema = z.object({
 });
 
 const LoginPage: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const toast = useToast();
   const navigate = useNavigate();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
     try {
       const validatedData = schema.parse({ username, password });
-      const apiUrl = process.env.API_URL;
+      const apiUrl = config.apiUrl;
       const response = await fetch(`${apiUrl}/api/login`, {
         method: "POST",
         headers: {
@@ -42,8 +44,8 @@ const LoginPage: React.FC = () => {
         throw new Error("Login failed");
       }
 
-      const user = { username }; // Assuming the server returns the username
-      setCurrentUser(user); // Set current user in localStorage
+      const data = await response.json();
+      setToken(data.access_token); // Set the JWT token
 
       toast({
         title: "Login Successful",
@@ -53,7 +55,9 @@ const LoginPage: React.FC = () => {
         isClosable: true,
       });
 
-      // Redirect to dashboard or home page after successful login
+      setPassword("");
+      setUsername("");
+
       navigate("/"); // Navigate to dashboard on success
     } catch (error: any) {
       toast({
@@ -71,7 +75,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <Flex align='center' justify='center' h='100vh'>
+    <Flex align='center' justify='center' w='100vw' h='100vh'>
       <Box p='8' borderWidth='1px' borderRadius='lg' boxShadow='lg'>
         <Heading as='h2' mb='6'>
           Login
@@ -93,10 +97,10 @@ const LoginPage: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </FormControl>
-          <Button m='4' type='submit' colorScheme='blue'>
+          <Button m='4' type='submit' color='blue.500'>
             Login
           </Button>
-          <Button m='4' colorScheme='black' onClick={handleNavigateToRegister}>
+          <Button m='4' color='teal.500' onClick={handleNavigateToRegister}>
             Register
           </Button>
         </form>

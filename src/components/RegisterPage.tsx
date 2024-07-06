@@ -11,26 +11,30 @@ import {
 } from "@chakra-ui/react";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
+import config from "../config";
 
 const schema = z.object({
   name: z.string().min(1),
   username: z.string().min(4),
+  email: z.string().email(),
   password: z.string().min(8).max(24),
 });
 
 const RegisterPage: React.FC = () => {
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const toast = useToast();
   const navigate = useNavigate();
+
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     try {
-      const validatedData = schema.parse({ name, username, password });
-      const apiUrl = process.env.API_URL;
+      const validatedData = schema.parse({ name, username, email, password });
+      const apiUrl = config.apiUrl;
       const response = await fetch(`${apiUrl}/api/register`, {
         method: "POST",
         headers: {
@@ -50,13 +54,17 @@ const RegisterPage: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
+      setEmail("");
+      setName("");
+      setPassword("");
+      setUsername("");
 
       // Redirect to login page after successful registration
       navigate("/login"); // Navigate to login page on success
     } catch (error: any) {
       toast({
         title: "Registration Error",
-        description: error?.message ?? "An error occurred while registering.",
+        description: "An error occurred while registering.",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -69,7 +77,7 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <Flex align='center' justify='center' h='100vh'>
+    <Flex align='center' justify='center' w='100vw' h='100vh'>
       <Box p='8' borderWidth='1px' borderRadius='lg' boxShadow='lg'>
         <Heading as='h2' mb='6'>
           Register
@@ -91,6 +99,14 @@ const RegisterPage: React.FC = () => {
               onChange={(e) => setUsername(e.target.value)}
             />
           </FormControl>
+          <FormControl id='email' mb='4'>
+            <FormLabel>Email</FormLabel>
+            <Input
+              type='email'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </FormControl>
           <FormControl id='password' mb='4'>
             <FormLabel>Password</FormLabel>
             <Input
@@ -99,11 +115,10 @@ const RegisterPage: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </FormControl>
-          <Button type='submit' colorScheme='blue'>
+          <Button m='4' type='submit' color='blue.500'>
             Register
           </Button>
-
-          <Button mt='4' colorScheme='grey' onClick={handleNavigateToLogin}>
+          <Button m='4' color='teal.500' onClick={handleNavigateToLogin}>
             Login
           </Button>
         </form>
