@@ -14,10 +14,13 @@ import { useNavigate } from "react-router-dom";
 import config from "../config";
 
 const schema = z.object({
-  name: z.string().min(1),
-  username: z.string().min(4),
+  name: z.string().min(1, "Name is required"),
+  username: z.string().min(4, "Username must be at least 4 characters"),
   email: z.string().email(),
-  password: z.string().min(8).max(24),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(24, "Password must be at most 24 characters"),
 });
 
 const RegisterPage: React.FC = () => {
@@ -64,7 +67,7 @@ const RegisterPage: React.FC = () => {
     } catch (error: any) {
       toast({
         title: "Registration Error",
-        description: "An error occurred while registering.",
+        description: error?.message ?? "An error occurred while registering.",
         status: "error",
         duration: 3000,
         isClosable: true,

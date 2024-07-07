@@ -11,17 +11,22 @@ import {
 } from "@chakra-ui/react";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
-import { setToken } from "../utils/authUtils"; // Import setCurrentUser utility
+import { useAuth } from "../context/AuthContext";
+import { getCurrentUser, setToken } from "../utils/authUtils"; // Import setCurrentUser utility
 import config from "../config";
 
 const schema = z.object({
-  username: z.string().min(4),
-  password: z.string().min(8).max(24),
+  username: z.string().min(4, "Username must be at least 4 characters"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(24, "Password must be at most 24 characters"),
 });
 
 const LoginPage: React.FC = () => {
   const toast = useToast();
   const navigate = useNavigate();
+  const { dispatch } = useAuth();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -45,7 +50,19 @@ const LoginPage: React.FC = () => {
       }
 
       const data = await response.json();
+      const user = await getCurrentUser();
       setToken(data.access_token); // Set the JWT token
+
+      dispatch({
+        type: "LOGIN",
+        payload: {
+          user: {
+            username: user?.username as string,
+            user_id: user?.user_id as number,
+          },
+          token: data.access_token,
+        },
+      }); // Dispatch login action
 
       toast({
         title: "Login Successful",
