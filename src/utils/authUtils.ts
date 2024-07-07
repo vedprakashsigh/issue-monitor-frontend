@@ -14,6 +14,7 @@ export const removeToken = (): void => {
 
 export const getCurrentUser = async (): Promise<{
   username: string;
+  user_id: number;
 } | null> => {
   const token = getToken();
   if (!token) return null;
@@ -27,7 +28,10 @@ export const getCurrentUser = async (): Promise<{
 
   if (response.ok) {
     const data = await response.json();
-    return data.logged_in_as;
+    return {
+      username: data["logged_in_as"]["username"],
+      user_id: data["user_id"],
+    };
   }
   return null;
 };
