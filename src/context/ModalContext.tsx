@@ -1,12 +1,9 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface ModalContextProps {
-  isProjectModalOpen: boolean;
-  isIssueModalOpen: boolean;
-  openProjectModal: () => void;
-  closeProjectModal: () => void;
-  openIssueModal: () => void;
-  closeIssueModal: () => void;
+  modals: Record<string, boolean>;
+  openModal: (modalName: string) => void;
+  closeModal: (modalName: string) => void;
 }
 
 const ModalContext = createContext<ModalContextProps | undefined>(undefined);
@@ -22,25 +19,30 @@ export const useModal = () => {
 export const ModalProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
-  const [isIssueModalOpen, setIsIssueModalOpen] = useState(false);
+  const [modals, setModals] = useState<Record<string, boolean>>({});
 
-  const openProjectModal = () => setIsProjectModalOpen(true);
-  const closeProjectModal = () => setIsProjectModalOpen(false);
-  const openIssueModal = () => setIsIssueModalOpen(true);
-  const closeIssueModal = () => setIsIssueModalOpen(false);
+  const openModal = (modalName: string) => {
+    setModals((prevModals) => ({
+      ...prevModals,
+      [modalName]: true,
+    }));
+  };
+
+  const closeModal = (modalName: string) => {
+    setModals((prevModals) => ({
+      ...prevModals,
+      [modalName]: false,
+    }));
+  };
+
+  const modalContextValue: ModalContextProps = {
+    modals,
+    openModal,
+    closeModal,
+  };
 
   return (
-    <ModalContext.Provider
-      value={{
-        isProjectModalOpen,
-        isIssueModalOpen,
-        openProjectModal,
-        closeProjectModal,
-        openIssueModal,
-        closeIssueModal,
-      }}
-    >
+    <ModalContext.Provider value={modalContextValue}>
       {children}
     </ModalContext.Provider>
   );
