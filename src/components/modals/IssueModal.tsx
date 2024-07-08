@@ -16,6 +16,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { z } from "zod";
+
 import { useModal } from "../../context/ModalContext";
 import { useProject } from "../../context/ProjectContext";
 import config from "../../config";
@@ -27,7 +28,7 @@ const issueSchema = z.object({
 });
 
 const IssueModal: React.FC = () => {
-  const { isIssueModalOpen, closeIssueModal } = useModal();
+  const { modals, closeModal } = useModal();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("Open");
@@ -51,16 +52,16 @@ const IssueModal: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create issue");
+        throw new Error("Failed to add issue");
       }
 
       toast({
-        title: "Issue created successfully",
+        title: "Issue added successfully",
         status: "success",
         duration: 3000,
         isClosable: true,
       });
-      closeIssueModal();
+      closeModal("issueModal");
     } catch (error: any) {
       toast({
         title: "Error",
@@ -73,10 +74,10 @@ const IssueModal: React.FC = () => {
   };
 
   return (
-    <Modal isOpen={isIssueModalOpen} onClose={closeIssueModal}>
+    <Modal isOpen={modals.issueModal} onClose={() => closeModal("issueModal")}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Create New Issue</ModalHeader>
+        <ModalHeader>Add New Issue</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <form onSubmit={handleSubmit}>
@@ -112,7 +113,7 @@ const IssueModal: React.FC = () => {
           </form>
         </ModalBody>
         <ModalFooter>
-          <Button variant='ghost' onClick={closeIssueModal}>
+          <Button variant='ghost' onClick={() => closeModal("issueModal")}>
             Close
           </Button>
         </ModalFooter>

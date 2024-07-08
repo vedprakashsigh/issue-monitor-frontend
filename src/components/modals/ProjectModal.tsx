@@ -27,7 +27,7 @@ const projectSchema = z.object({
 });
 
 const ProjectModal: React.FC = () => {
-  const { isProjectModalOpen, closeProjectModal } = useModal();
+  const { modals, closeModal } = useModal();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const toast = useToast();
@@ -52,18 +52,18 @@ const ProjectModal: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create project");
+        throw new Error("Failed to add project");
       }
 
       const newProject = await response.json();
       setSelectedProjectId(newProject.id);
       toast({
-        title: "Project created successfully",
+        title: "Project added successfully",
         status: "success",
         duration: 3000,
         isClosable: true,
       });
-      closeProjectModal();
+      closeModal("projectModal");
     } catch (error: any) {
       toast({
         title: "Error",
@@ -76,7 +76,10 @@ const ProjectModal: React.FC = () => {
   };
 
   return (
-    <Modal isOpen={isProjectModalOpen} onClose={closeProjectModal}>
+    <Modal
+      isOpen={modals.projectModal}
+      onClose={() => closeModal("projectModal")}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Create New Project</ModalHeader>
@@ -104,7 +107,7 @@ const ProjectModal: React.FC = () => {
           </form>
         </ModalBody>
         <ModalFooter>
-          <Button variant='ghost' onClick={closeProjectModal}>
+          <Button variant='ghost' onClick={() => closeModal("projectModal")}>
             Close
           </Button>
         </ModalFooter>

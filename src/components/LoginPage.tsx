@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getCurrentUser, setToken } from "../utils/authUtils"; // Import setCurrentUser utility
 import config from "../config";
+import { useTheme } from "../context/ThemeContext"; // Import useTheme hook
 
 const schema = z.object({
   username: z.string().min(4, "Username must be at least 4 characters"),
@@ -27,6 +28,7 @@ const LoginPage: React.FC = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const { dispatch } = useAuth();
+  const { selectedTheme } = useTheme(); // Use the useTheme hook to get the current selectedTheme
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -92,32 +94,64 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <Flex align='center' justify='center' w='100vw' h='100vh'>
-      <Box p='8' borderWidth='1px' borderRadius='lg' boxShadow='lg'>
-        <Heading as='h2' mb='6'>
+    <Flex
+      align='center'
+      justify='center'
+      w='100vw'
+      h='100vh'
+      bg={selectedTheme.colors.background} // Use selectedTheme's background color
+      color={selectedTheme.colors.text} // Use selectedTheme's text color
+    >
+      <Box
+        p='8'
+        borderWidth='1px'
+        borderRadius='lg'
+        boxShadow='lg'
+        bg={selectedTheme.colors.primary} // Use selectedTheme's primary color for background
+        color={selectedTheme.colors.text} // Use selectedTheme's text color
+      >
+        <Heading as='h2' mb='6' color={selectedTheme.colors.text}>
+          {" "}
+          {/* Use selectedTheme's text color */}
           Login
         </Heading>
         <form onSubmit={handleLogin}>
           <FormControl id='username' mb='4'>
-            <FormLabel>Username</FormLabel>
+            <FormLabel color={selectedTheme.colors.text}>Username</FormLabel>{" "}
+            {/* Use selectedTheme's text color */}
             <Input
               type='text'
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              bg={selectedTheme.colors.background} // Use selectedTheme's background color
+              color={selectedTheme.colors.text} // Use selectedTheme's text color
+              borderColor={selectedTheme.colors.text} // Use selectedTheme's text color for border
             />
           </FormControl>
           <FormControl id='password' mb='4'>
-            <FormLabel>Password</FormLabel>
+            <FormLabel color={selectedTheme.colors.text}>Password</FormLabel>{" "}
+            {/* Use selectedTheme's text color */}
             <Input
               type='password'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              bg={selectedTheme.colors.background} // Use selectedTheme's background color
+              color={selectedTheme.colors.text} // Use selectedTheme's text color
+              borderColor={selectedTheme.colors.text} // Use selectedTheme's text color for border
             />
           </FormControl>
-          <Button m='4' type='submit' color='blue.500'>
+          <Button m='4' type='submit' color={selectedTheme.colors.accent}>
+            {" "}
+            {/* Use selectedTheme's accent color */}
             Login
           </Button>
-          <Button m='4' color='teal.500' onClick={handleNavigateToRegister}>
+          <Button
+            m='4'
+            color={selectedTheme.colors.secondary}
+            onClick={handleNavigateToRegister}
+          >
+            {" "}
+            {/* Use selectedTheme's secondary color */}
             Register
           </Button>
         </form>

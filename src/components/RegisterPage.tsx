@@ -12,6 +12,7 @@ import {
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
+import { useTheme } from "../context/ThemeContext"; // Import useTheme hook
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -26,6 +27,7 @@ const schema = z.object({
 const RegisterPage: React.FC = () => {
   const toast = useToast();
   const navigate = useNavigate();
+  const { selectedTheme } = useTheme(); // Use the useTheme hook to get the current theme
 
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -80,48 +82,78 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <Flex align='center' justify='center' w='100vw' h='100vh'>
-      <Box p='8' borderWidth='1px' borderRadius='lg' boxShadow='lg'>
-        <Heading as='h2' mb='6'>
+    <Flex
+      align='center'
+      justify='center'
+      w='100vw'
+      h='100vh'
+      bg={selectedTheme.colors.background}
+      color={selectedTheme.colors.text}
+    >
+      <Box
+        p='8'
+        borderWidth='1px'
+        borderRadius='lg'
+        boxShadow='lg'
+        bg={selectedTheme.colors.primary}
+        color={selectedTheme.colors.text}
+      >
+        <Heading as='h2' mb='6' color={selectedTheme.colors.text}>
           Register
         </Heading>
         <form onSubmit={handleSubmit}>
           <FormControl id='name' mb='4'>
-            <FormLabel>Name</FormLabel>
+            <FormLabel color={selectedTheme.colors.text}>Name</FormLabel>
             <Input
               type='text'
               value={name}
               onChange={(e) => setName(e.target.value)}
+              bg={selectedTheme.colors.background}
+              color={selectedTheme.colors.text}
+              borderColor={selectedTheme.colors.text}
             />
           </FormControl>
           <FormControl id='username' mb='4'>
-            <FormLabel>Username</FormLabel>
+            <FormLabel color={selectedTheme.colors.text}>Username</FormLabel>
             <Input
               type='text'
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              bg={selectedTheme.colors.background}
+              color={selectedTheme.colors.text}
+              borderColor={selectedTheme.colors.text}
             />
           </FormControl>
           <FormControl id='email' mb='4'>
-            <FormLabel>Email</FormLabel>
+            <FormLabel color={selectedTheme.colors.text}>Email</FormLabel>
             <Input
               type='email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              bg={selectedTheme.colors.background}
+              color={selectedTheme.colors.text}
+              borderColor={selectedTheme.colors.text}
             />
           </FormControl>
           <FormControl id='password' mb='4'>
-            <FormLabel>Password</FormLabel>
+            <FormLabel color={selectedTheme.colors.text}>Password</FormLabel>
             <Input
               type='password'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              bg={selectedTheme.colors.background}
+              color={selectedTheme.colors.text}
+              borderColor={selectedTheme.colors.text}
             />
           </FormControl>
-          <Button m='4' type='submit' color='blue.500'>
+          <Button m='4' type='submit' color={selectedTheme.colors.accent}>
             Register
           </Button>
-          <Button m='4' color='teal.500' onClick={handleNavigateToLogin}>
+          <Button
+            m='4'
+            color={selectedTheme.colors.secondary}
+            onClick={handleNavigateToLogin}
+          >
             Login
           </Button>
         </form>

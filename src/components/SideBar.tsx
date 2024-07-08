@@ -1,15 +1,19 @@
-import { Flex, Heading, Button, VStack } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import { Flex, Heading, Button, VStack } from "@chakra-ui/react";
+
 import { useAuth } from "../context/AuthContext";
 import { useProject } from "../context/ProjectContext";
 import { useModal } from "../context/ModalContext";
+import { useTheme } from "../context/ThemeContext";
+
 import config from "../config";
 
 const Sidebar: React.FC = () => {
   const [projects, setProjects] = useState<any[]>([]);
   const { state } = useAuth();
   const { setSelectedProjectId } = useProject();
-  const { openProjectModal } = useModal();
+  const { openModal } = useModal();
+  const { selectedTheme } = useTheme();
 
   useEffect(() => {
     // Fetch the projects of the logged-in user
@@ -49,13 +53,18 @@ const Sidebar: React.FC = () => {
       as='aside'
       direction='column'
       p='4'
-      bg='gray.200'
+      bg={selectedTheme.colors.sidebarBg}
       w='20%'
       h='100%'
       boxShadow='lg'
-      borderRadius='lg'
     >
-      <Heading as='h3' size='md' mb='6' textAlign='center' color='gray.700'>
+      <Heading
+        as='h3'
+        size='md'
+        mb='6'
+        textAlign='center'
+        color={selectedTheme.colors.sidebarHeadingText}
+      >
         Projects
       </Heading>
       <VStack spacing='4' align='stretch' flex='1' overflowY='auto'>
@@ -63,7 +72,8 @@ const Sidebar: React.FC = () => {
           <Button
             key={project.id}
             variant='ghost'
-            colorScheme='blue'
+            colorScheme={selectedTheme.colors.buttonPrimary}
+            color={selectedTheme.colors.sidebarProjectName}
             onClick={() => setSelectedProjectId(project.id)}
             size='sm'
           >
@@ -73,13 +83,14 @@ const Sidebar: React.FC = () => {
       </VStack>
       <Button
         mt='4'
-        onClick={openProjectModal}
-        colorScheme='teal'
+        onClick={() => openModal("projectModal")}
+        colorScheme={selectedTheme.colors.buttonPrimary}
+        color={selectedTheme.colors.sidebarButtonText}
         variant='solid'
         size='sm'
         w='full'
       >
-        Create New Project
+        Add New Project
       </Button>
     </Flex>
   );

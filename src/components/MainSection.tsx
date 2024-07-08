@@ -1,30 +1,24 @@
-import {
-  Flex,
-  Heading,
-  Box,
-  Text,
-  Button,
-  VStack,
-  Spacer,
-} from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Flex, Heading, Box, Text, Button, VStack } from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
+
 import { useAuth } from "../context/AuthContext";
 import { useProject } from "../context/ProjectContext";
 import { useModal } from "../context/ModalContext";
+import { useTheme } from "../context/ThemeContext";
 import config from "../config";
-import { DeleteIcon } from "@chakra-ui/icons";
-import { useNavigate } from "react-router-dom";
 
 const MainSection: React.FC = () => {
   const [project, setProject] = useState<any>(null);
   const { state } = useAuth();
   const { selectedProjectId } = useProject();
-  const { openIssueModal } = useModal();
+  const { openModal } = useModal();
+  const { selectedTheme } = useTheme(); // Use selectedTheme from ThemeContext
   const navigate = useNavigate();
 
   useEffect(() => {
     if (selectedProjectId !== null) {
-      // Fetch the currently selected project
       const fetchProject = async () => {
         const token = state.token;
         const apiUrl = config.apiUrl;
@@ -55,8 +49,15 @@ const MainSection: React.FC = () => {
         direction='column'
         p='4'
         flex='1'
+        boxShadow='md'
+        bg={selectedTheme.colors.mainSectionBg}
+        color={selectedTheme.colors.mainSectionText}
       >
-        <Box textAlign='center' p='4'>
+        <Box
+          textAlign='center'
+          p='4'
+          color={selectedTheme.colors.mainSectionText}
+        >
           Select a project to see details
         </Box>
       </Flex>
@@ -84,18 +85,29 @@ const MainSection: React.FC = () => {
       mx='auto'
       boxShadow='md'
       borderRadius='md'
-      bg='white'
+      bg={selectedTheme.colors.mainSectionBg}
+      color={selectedTheme.colors.mainSectionText}
     >
-      <Heading as='h2' size='xl' mb='4' textAlign='center' color='gray.700'>
+      <Heading
+        as='h2'
+        size='xl'
+        mb='4'
+        textAlign='center'
+        color={selectedTheme.colors.mainSectionHeading}
+      >
         {project.name}
       </Heading>
-      <Text mb='4' textAlign='center' color='gray.600'>
+      <Text
+        mb='4'
+        textAlign='center'
+        color={selectedTheme.colors.mainSectionText}
+      >
         {project.description}
       </Text>
       <Button
-        onClick={openIssueModal}
+        onClick={() => openModal("issueModal")}
         mt='4'
-        colorScheme='blue'
+        colorScheme='green'
         alignSelf='center'
         size='sm'
       >
@@ -109,15 +121,25 @@ const MainSection: React.FC = () => {
             borderRadius='lg'
             overflow='hidden'
             boxShadow='md'
+            bg={selectedTheme.colors.issueBg}
           >
             <Box p='4'>
-              <Heading as='h3' size='md'>
+              <Heading
+                as='h3'
+                size='md'
+                color={selectedTheme.colors.issueHeading}
+              >
                 {issue.title}
               </Heading>
-              <Text fontSize='sm' mt='1'>
+              <Text fontSize='sm' mt='1' color={selectedTheme.colors.issueText}>
                 {issue.description}
               </Text>
-              <Text fontSize='sm' mt='1' fontWeight='bold'>
+              <Text
+                fontSize='sm'
+                mt='1'
+                fontWeight='bold'
+                color={selectedTheme.colors.issueStatus}
+              >
                 Status: {issue.status}
               </Text>
             </Box>

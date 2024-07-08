@@ -5,11 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../utils/authUtils";
 import { useAuth } from "../context/AuthContext";
 import { ModalProvider } from "../context/ModalContext";
-import { ProjectProvider } from "../context/ProjectContext"; // Added ProjectProvider
+import { ProjectProvider } from "../context/ProjectContext";
+import { useTheme } from "../context/ThemeContext";
 
 import Header from "./Header";
-import MainSection from "./MainSection";
 import Sidebar from "./SideBar";
+import MainSection from "./MainSection";
 import Footer from "./Footer";
 
 import ProjectModal from "./modals/ProjectModal";
@@ -19,6 +20,7 @@ const DashboardPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { state, dispatch } = useAuth();
+  const { selectedTheme } = useTheme();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -43,7 +45,12 @@ const DashboardPage: React.FC = () => {
   return (
     <ProjectProvider>
       <ModalProvider>
-        <Flex direction='column' h='100vh' bg='gray.50' overflow='hidden'>
+        <Flex
+          direction='column'
+          h='100vh'
+          bg={selectedTheme.colors.background}
+          overflow='hidden'
+        >
           <Header />
           <Flex direction='row' flex='1' overflow='hidden'>
             <Sidebar />
@@ -59,4 +66,5 @@ const DashboardPage: React.FC = () => {
     </ProjectProvider>
   );
 };
+
 export default DashboardPage;
