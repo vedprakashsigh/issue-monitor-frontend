@@ -1,25 +1,25 @@
-import React, { useState } from "react";
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   Button,
   FormControl,
   FormLabel,
   Input,
-  Textarea,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Select,
+  Textarea,
   useToast,
 } from "@chakra-ui/react";
+import React, { useState } from "react";
 import { z } from "zod";
 
-import { useModal } from "../../context/ModalContext";
-import { useProject } from "../../context/ProjectContext";
 import config from "../../config";
+import { useModal } from "../../context/ModalContext";
+import { useTheme } from "../../context/ThemeContext";
 
 const issueSchema = z.object({
   title: z.string().min(1, "Issue title is required"),
@@ -27,13 +27,13 @@ const issueSchema = z.object({
   status: z.enum(["Open", "In Progress", "Closed"]),
 });
 
-const IssueModal: React.FC = () => {
-  const { modals, closeModal } = useModal();
+const AddIssueModal: React.FC = () => {
+  const { modals, closeModal, projectId } = useModal();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("Open");
   const toast = useToast();
-  const { selectedProjectId } = useProject();
+  const { selectedTheme } = useTheme();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -47,7 +47,7 @@ const IssueModal: React.FC = () => {
         },
         body: JSON.stringify({
           ...validatedData,
-          project_id: selectedProjectId,
+          project_id: projectId,
         }),
       });
 
@@ -61,7 +61,10 @@ const IssueModal: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
-      closeModal("issueModal");
+      setTitle("");
+      setDescription("");
+      setStatus("Open");
+      closeModal("addIssue");
     } catch (error: any) {
       toast({
         title: "Error",
@@ -74,9 +77,12 @@ const IssueModal: React.FC = () => {
   };
 
   return (
-    <Modal isOpen={modals.issueModal} onClose={() => closeModal("issueModal")}>
+    <Modal isOpen={modals.addIssue} onClose={() => closeModal("addIssue")}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent
+        bg={selectedTheme.colors.modalBg}
+        color={selectedTheme.colors.modalContent}
+      >
         <ModalHeader>Add New Issue</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -87,6 +93,8 @@ const IssueModal: React.FC = () => {
                 type='text'
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                bg={selectedTheme.colors.inputBg}
+                color={selectedTheme.colors.inputText}
               />
             </FormControl>
             <FormControl id='description' mb='4' isRequired>
@@ -94,6 +102,8 @@ const IssueModal: React.FC = () => {
               <Textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                bg={selectedTheme.colors.inputBg}
+                color={selectedTheme.colors.inputText}
               />
             </FormControl>
             <FormControl id='status' mb='4' isRequired>
@@ -101,19 +111,47 @@ const IssueModal: React.FC = () => {
               <Select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
+                bg={selectedTheme.colors.inputBg}
+                color={selectedTheme.colors.inputText}
               >
-                <option value='Open'>Open</option>
-                <option value='In Progress'>In Progress</option>
-                <option value='Closed'>Closed</option>
+                <option
+                  color={selectedTheme.colors.option}
+                  style={{ backgroundColor: selectedTheme.colors.option }}
+                  value='Open'
+                >
+                  Open
+                </option>
+                <option
+                  color={selectedTheme.colors.option}
+                  style={{ backgroundColor: selectedTheme.colors.option }}
+                  value='In Progress'
+                >
+                  In Progress
+                </option>
+                <option
+                  color={selectedTheme.colors.option}
+                  style={{ backgroundColor: selectedTheme.colors.option }}
+                  value='Closed'
+                >
+                  Closed
+                </option>
               </Select>
             </FormControl>
-            <Button type='submit' colorScheme='blue'>
-              Create Issue
+            <Button type='submit' colorScheme='green'>
+              Add Issue
             </Button>
           </form>
         </ModalBody>
-        <ModalFooter>
-          <Button variant='ghost' onClick={() => closeModal("issueModal")}>
+        <ModalFooter
+          bg={selectedTheme.colors.modalBg}
+          color={selectedTheme.colors.modalContent}
+        >
+          <Button
+            variant='ghost'
+            onClick={() => closeModal("addIssue")}
+            _hover={{ bg: selectedTheme.colors.buttonSecondary }}
+            color={selectedTheme.colors.buttonPrimary}
+          >
             Close
           </Button>
         </ModalFooter>
@@ -122,4 +160,4 @@ const IssueModal: React.FC = () => {
   );
 };
 
-export default IssueModal;
+export default AddIssueModal;

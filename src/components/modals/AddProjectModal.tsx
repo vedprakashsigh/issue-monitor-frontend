@@ -1,24 +1,25 @@
-import React, { useState } from "react";
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   Button,
   FormControl,
   FormLabel,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Textarea,
   useToast,
 } from "@chakra-ui/react";
+import React, { useState } from "react";
 import { z } from "zod";
-import { useModal } from "../../context/ModalContext";
-import { useProject } from "../../context/ProjectContext";
 import config from "../../config";
 import { useAuth } from "../../context/AuthContext";
+import { useModal } from "../../context/ModalContext";
+import { useProject } from "../../context/ProjectContext";
+import { useTheme } from "../../context/ThemeContext";
 
 const projectSchema = z.object({
   name: z.string().min(1, "Project name is required"),
@@ -26,13 +27,14 @@ const projectSchema = z.object({
   user_id: z.number(),
 });
 
-const ProjectModal: React.FC = () => {
+const AddProjectModal: React.FC = () => {
   const { modals, closeModal } = useModal();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const toast = useToast();
   const { setSelectedProjectId } = useProject();
   const { state } = useAuth();
+  const { selectedTheme } = useTheme(); // Use selectedTheme from ThemeContext
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -63,7 +65,9 @@ const ProjectModal: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
-      closeModal("projectModal");
+      setName("");
+      setDescription("");
+      closeModal("addProject");
     } catch (error: any) {
       toast({
         title: "Error",
@@ -76,13 +80,13 @@ const ProjectModal: React.FC = () => {
   };
 
   return (
-    <Modal
-      isOpen={modals.projectModal}
-      onClose={() => closeModal("projectModal")}
-    >
+    <Modal isOpen={modals.addProject} onClose={() => closeModal("addProject")}>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Create New Project</ModalHeader>
+      <ModalContent
+        bg={selectedTheme.colors.modalBg}
+        color={selectedTheme.colors.modalContent}
+      >
+        <ModalHeader>Add New Project</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <form onSubmit={handleSubmit}>
@@ -92,6 +96,8 @@ const ProjectModal: React.FC = () => {
                 type='text'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                bg={selectedTheme.colors.inputBg}
+                color={selectedTheme.colors.inputText}
               />
             </FormControl>
             <FormControl id='description' mb='4' isRequired>
@@ -99,15 +105,25 @@ const ProjectModal: React.FC = () => {
               <Textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                bg={selectedTheme.colors.inputBg}
+                color={selectedTheme.colors.inputText}
               />
             </FormControl>
-            <Button type='submit' colorScheme='blue'>
-              Create Project
+            <Button type='submit' colorScheme='green'>
+              Add Project
             </Button>
           </form>
         </ModalBody>
-        <ModalFooter>
-          <Button variant='ghost' onClick={() => closeModal("projectModal")}>
+        <ModalFooter
+          bg={selectedTheme.colors.modalBg}
+          color={selectedTheme.colors.modalContent}
+        >
+          <Button
+            variant='ghost'
+            onClick={() => closeModal("addProject")}
+            _hover={{ bg: selectedTheme.colors.buttonSecondary }}
+            color={selectedTheme.colors.buttonPrimary}
+          >
             Close
           </Button>
         </ModalFooter>
@@ -116,4 +132,4 @@ const ProjectModal: React.FC = () => {
   );
 };
 
-export default ProjectModal;
+export default AddProjectModal;
