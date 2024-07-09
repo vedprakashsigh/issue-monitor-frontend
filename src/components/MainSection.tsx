@@ -1,21 +1,19 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Flex, Heading, Box, Text, Button, VStack } from "@chakra-ui/react";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { Box, Button, Flex, Heading, Text, VStack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 
-import { useAuth } from "../context/AuthContext";
-import { useProject } from "../context/ProjectContext";
-import { useModal } from "../context/ModalContext";
-import { useTheme } from "../context/ThemeContext";
 import config from "../config";
+import { useAuth } from "../context/AuthContext";
+import { useModal } from "../context/ModalContext";
+import { useProject } from "../context/ProjectContext";
+import { useTheme } from "../context/ThemeContext";
 
 const MainSection: React.FC = () => {
   const [project, setProject] = useState<any>(null);
   const { state } = useAuth();
   const { selectedProjectId } = useProject();
-  const { openModal } = useModal();
-  const { selectedTheme } = useTheme(); // Use selectedTheme from ThemeContext
-  const navigate = useNavigate();
+  const { openModal, modals } = useModal();
+  const { selectedTheme } = useTheme();
 
   useEffect(() => {
     if (selectedProjectId !== null) {
@@ -37,8 +35,10 @@ const MainSection: React.FC = () => {
         }
       };
       fetchProject();
+    } else {
+      setProject(null);
     }
-  }, [selectedProjectId, state.token]);
+  }, [selectedProjectId, state.token, modals]);
 
   if (!project) {
     return (
@@ -48,6 +48,8 @@ const MainSection: React.FC = () => {
         align='center'
         direction='column'
         p='4'
+        w='85%'
+        mx='auto'
         flex='1'
         boxShadow='md'
         bg={selectedTheme.colors.mainSectionBg}
@@ -64,24 +66,12 @@ const MainSection: React.FC = () => {
     );
   }
 
-  const handleDeleteIssue = async (id: number) => {
-    const token = state.token;
-    const apiUrl = config.apiUrl;
-    await fetch(`${apiUrl}/api/issues?id=${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    navigate("/");
-  };
-
   return (
     <Flex
       as='main'
       direction='column'
       p='4'
-      w='75%'
+      w='85%'
       mx='auto'
       boxShadow='md'
       borderRadius='md'
@@ -105,13 +95,13 @@ const MainSection: React.FC = () => {
         {project.description}
       </Text>
       <Button
-        onClick={() => openModal("issueModal")}
+        onClick={() => openModal("addIssue", project.id)}
         mt='4'
         colorScheme='green'
         alignSelf='center'
         size='sm'
       >
-        Create New Issue
+        Add New Issue
       </Button>
       <VStack mt='8' align='stretch' spacing='4'>
         {project?.issues.map((issue: any) => (
@@ -145,11 +135,24 @@ const MainSection: React.FC = () => {
             </Box>
             <Flex p='4' justify='flex-end'>
               <Button
-                onClick={() => handleDeleteIssue(issue.id)}
-                colorScheme='red'
+                onClick={() => openModal("editIssue", project.id, issue.id)}
+                color={selectedTheme.colors.editButton}
+                leftIcon={<EditIcon />}
+                variant='outline'
+                size='sm'
+                mx='2'
+                boxShadow='md'
+              >
+                Edit Issue
+              </Button>
+              <Button
+                onClick={() => openModal("deleteModal", project.id, issue.id)}
+                color={selectedTheme.colors.deleteButton}
                 leftIcon={<DeleteIcon />}
                 variant='outline'
                 size='sm'
+                mx='2'
+                boxShadow='md'
               >
                 Delete Issue
               </Button>

@@ -1,20 +1,23 @@
+import { Box, Flex } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { Flex, Box } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
-import { getCurrentUser } from "../utils/authUtils";
 import { useAuth } from "../context/AuthContext";
 import { ModalProvider } from "../context/ModalContext";
 import { ProjectProvider } from "../context/ProjectContext";
 import { useTheme } from "../context/ThemeContext";
+import { getCurrentUser } from "../utils/authUtils";
 
-import Header from "./Header";
-import Sidebar from "./SideBar";
-import MainSection from "./MainSection";
 import Footer from "./Footer";
+import Header from "./Header";
+import MainSection from "./MainSection";
+import Sidebar from "./SideBar";
 
-import ProjectModal from "./modals/ProjectModal";
-import IssueModal from "./modals/IssueModal";
+import AddIssueModal from "./modals/AddIssueModal";
+import AddProjectModal from "./modals/AddProjectModal";
+import EditIssueModal from "./modals/EditIssueModal";
+import EditProjectModal from "./modals/EditProjectModal";
+import DeleteModal from "./modals/DeleteModal";
 
 const DashboardPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -59,8 +62,11 @@ const DashboardPage: React.FC = () => {
             </Box>
           </Flex>
           <Footer />
-          <ProjectModal />
-          <IssueModal />
+          <AddProjectModal />
+          <AddIssueModal />
+          <EditProjectModal />
+          <EditIssueModal />
+          <DeleteModal />
         </Flex>
       </ModalProvider>
     </ProjectProvider>

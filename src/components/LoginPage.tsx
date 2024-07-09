@@ -1,20 +1,20 @@
-import { useState } from "react";
 import {
-  Flex,
   Box,
-  Heading,
+  Button,
+  Flex,
   FormControl,
   FormLabel,
+  Heading,
   Input,
-  Button,
   useToast,
 } from "@chakra-ui/react";
-import { z } from "zod";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { getCurrentUser, setToken } from "../utils/authUtils"; // Import setCurrentUser utility
+import { z } from "zod";
 import config from "../config";
+import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext"; // Import useTheme hook
+import { getCurrentUser, setToken } from "../utils/authUtils"; // Import setCurrentUser utility
 
 const schema = z.object({
   username: z.string().min(4, "Username must be at least 4 characters"),

@@ -1,6 +1,6 @@
-import React, { createContext, useReducer, useContext, ReactNode } from "react";
+import React, { createContext, ReactNode, useContext, useReducer } from "react";
 
-interface AuthState {
+export interface AuthState {
   user: { username: string; user_id: number } | null;
   token: string | null;
 }

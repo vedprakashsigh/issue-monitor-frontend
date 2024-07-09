@@ -1,8 +1,8 @@
 import { CSSReset } from "@chakra-ui/react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import DashboardPage from "./components/DashboardPage";
 import LoginPage from "./components/LoginPage";
 import RegisterPage from "./components/RegisterPage";
-import DashboardPage from "./components/DashboardPage";
 
 const App: React.FC = () => {
   return (

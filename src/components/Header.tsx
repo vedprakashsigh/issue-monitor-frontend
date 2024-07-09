@@ -1,14 +1,14 @@
-import React from "react";
-import { Flex, Heading, Button, IconButton, Spacer } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
+import { Button, Flex, Heading, IconButton, Spacer } from "@chakra-ui/react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import ThemeToggle from "./ThemeToggle";
 
-import { logout } from "../utils/authUtils";
 import { useAuth } from "../context/AuthContext";
 import { useProject } from "../context/ProjectContext";
 import { useTheme } from "../context/ThemeContext";
+import { logout } from "../utils/authUtils";
 
 const Header: React.FC = () => {
   const { state, dispatch } = useAuth();

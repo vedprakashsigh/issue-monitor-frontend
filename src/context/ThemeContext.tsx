@@ -1,6 +1,6 @@
-import React, { createContext, useState, useContext } from "react";
 import { ChakraProvider, ColorModeProvider } from "@chakra-ui/react";
-import { lightTheme, darkTheme } from "../theme";
+import React, { createContext, useContext, useState } from "react";
+import { darkTheme, lightTheme } from "../theme";
 
 type Theme = "light" | "dark";
 
