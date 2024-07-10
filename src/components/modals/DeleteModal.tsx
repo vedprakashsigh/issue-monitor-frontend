@@ -25,6 +25,9 @@ const DeleteModal: React.FC = () => {
 
   const handleDelete = async () => {
     try {
+      if (!state.token) {
+        throw new Error("No token found");
+      }
       const token = state.token;
       const apiUrl = config.apiUrl;
       await fetch(`${apiUrl}/api/${title.toLowerCase()}?id=${id}`, {
@@ -39,6 +42,7 @@ const DeleteModal: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
+
       closeModal("deleteModal");
     } catch (error: any) {
       toast({
@@ -61,6 +65,8 @@ const DeleteModal: React.FC = () => {
         bg={selectedTheme.colors.modalBg}
         color={selectedTheme.colors.modalContent}
         borderRadius='md'
+        my='auto'
+        mx='4'
       >
         <ModalHeader borderBottomWidth='1px'>{title}</ModalHeader>
         <ModalCloseButton />

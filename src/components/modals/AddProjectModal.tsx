@@ -39,6 +39,9 @@ const AddProjectModal: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
+      if (!state.token) {
+        throw new Error("No token found");
+      }
       const validatedData = projectSchema.parse({
         name,
         description,
@@ -48,6 +51,7 @@ const AddProjectModal: React.FC = () => {
       const response = await fetch(`${apiUrl}/api/projects`, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${state?.token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(validatedData),
@@ -85,6 +89,8 @@ const AddProjectModal: React.FC = () => {
       <ModalContent
         bg={selectedTheme.colors.modalBg}
         color={selectedTheme.colors.modalContent}
+        my='auto'
+        mx='4'
       >
         <ModalHeader>Add New Project</ModalHeader>
         <ModalCloseButton />

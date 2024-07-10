@@ -39,6 +39,9 @@ const EditProjectModal: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
+      if (!state.token) {
+        throw new Error("No token found");
+      }
       const validatedData = projectSchema.parse({
         name,
         description,
@@ -48,6 +51,7 @@ const EditProjectModal: React.FC = () => {
       const response = await fetch(`${apiUrl}/api/projects`, {
         method: "PATCH",
         headers: {
+          Authorization: `Bearer ${state?.token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ ...validatedData, project_id: projectId }),
@@ -89,6 +93,8 @@ const EditProjectModal: React.FC = () => {
       <ModalContent
         bg={selectedTheme.colors.modalBg}
         color={selectedTheme.colors.modalContent}
+        my='auto'
+        mx='4'
       >
         <ModalHeader>Edit Project</ModalHeader>
         <ModalCloseButton />

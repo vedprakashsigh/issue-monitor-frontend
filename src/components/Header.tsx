@@ -1,4 +1,9 @@
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import {
+  ArrowBackIcon,
+  CloseIcon,
+  HamburgerIcon,
+  SmallCloseIcon,
+} from "@chakra-ui/icons";
 import { Button, Flex, Heading, IconButton, Spacer } from "@chakra-ui/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,15 +15,28 @@ import { useProject } from "../context/ProjectContext";
 import { useTheme } from "../context/ThemeContext";
 import { logout } from "../utils/authUtils";
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  showSidebar: boolean;
+  setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Header: React.FC<HeaderProps> = ({
+  showSidebar,
+  setShowSidebar,
+}: HeaderProps) => {
   const { state, dispatch } = useAuth();
   const navigate = useNavigate();
-  const { setSelectedProjectId } = useProject();
+  const { setSelectedProjectId, setProjects } = useProject();
   const { selectedTheme } = useTheme();
+
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
 
   const handleLogout = () => {
     logout();
     dispatch({ type: "LOGOUT" });
+    setProjects(null);
     navigate("/login");
   };
 
@@ -35,7 +53,7 @@ const Header: React.FC = () => {
       p='4'
       bg={selectedTheme.colors.headerBg}
       color={selectedTheme.colors.headerText}
-      w='100vw'
+      w='100%'
     >
       <IconButton
         icon={<ArrowBackIcon />}
@@ -43,14 +61,29 @@ const Header: React.FC = () => {
         onClick={handleOnClick}
         colorScheme={selectedTheme.colors.iconColor}
         color={selectedTheme.colors.headerText}
+        pt='1'
+      />
+      <IconButton
+        icon={showSidebar ? <SmallCloseIcon /> : <HamburgerIcon />}
+        aria-label={showSidebar ? "Close Sidebar" : "Open Sidebar"}
+        onClick={toggleSidebar}
+        display={{ base: "block", md: "none" }}
+        colorScheme={selectedTheme.colors.iconColor}
+        color={selectedTheme.colors.headerText}
+        size='md'
       />
       <Spacer />
       <Flex align='center'>
-        <Heading as='h4' size='md' mr='4'>
+        <Heading as='h5' size={{ base: "xs", md: "md" }} m='auto'>
           {state.user?.username}
         </Heading>
         <ThemeToggle />
-        <Button colorScheme='red' onClick={handleLogout}>
+        <Button
+          colorScheme='red'
+          onClick={handleLogout}
+          size={{ base: "xs", md: "md" }}
+          m='auto'
+        >
           Logout
         </Button>
       </Flex>

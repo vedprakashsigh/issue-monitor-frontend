@@ -6,14 +6,20 @@ import { ThemeProvider } from "./context/ThemeContext.tsx";
 
 import App from "./App.tsx";
 import "./index.css";
+import { ModalProvider } from "./context/ModalContext.tsx";
+import { ProjectProvider } from "./context/ProjectContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AuthProvider>
       <ThemeProvider>
-        <ChakraProvider>
-          <App />
-        </ChakraProvider>
+        <ModalProvider>
+          <ProjectProvider>
+            <ChakraProvider>
+              <App />
+            </ChakraProvider>
+          </ProjectProvider>
+        </ModalProvider>
       </ThemeProvider>
     </AuthProvider>
   </React.StrictMode>

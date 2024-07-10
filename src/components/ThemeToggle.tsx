@@ -17,9 +17,9 @@ const ThemeToggle: React.FC = () => {
       aria-label='Toggle Theme'
       icon={isDark ? <SunIcon /> : <MoonIcon />}
       onClick={handleToggleClick}
-      size='md'
+      size={{ base: "sm", md: "md" }}
+      m='auto'
       variant='ghost'
-      mx='4'
       colorScheme={theme === "light" ? "gray" : "whiteAlpha"}
       color={theme === "light" ? "gray" : "white"}
     />

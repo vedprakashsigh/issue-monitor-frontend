@@ -20,6 +20,7 @@ import { z } from "zod";
 import config from "../../config";
 import { useModal } from "../../context/ModalContext";
 import { useTheme } from "../../context/ThemeContext";
+import { useAuth } from "../../context/AuthContext";
 
 const issueSchema = z.object({
   title: z.string().min(1, "Issue title is required"),
@@ -34,15 +35,20 @@ const AddIssueModal: React.FC = () => {
   const [status, setStatus] = useState("Open");
   const toast = useToast();
   const { selectedTheme } = useTheme();
+  const { state } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
+      if (!state.token) {
+        throw new Error("No token found");
+      }
       const validatedData = issueSchema.parse({ title, description, status });
       const apiUrl = config.apiUrl;
       const response = await fetch(`${apiUrl}/api/issues`, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${state.token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -82,6 +88,8 @@ const AddIssueModal: React.FC = () => {
       <ModalContent
         bg={selectedTheme.colors.modalBg}
         color={selectedTheme.colors.modalContent}
+        my='auto'
+        mx='4'
       >
         <ModalHeader>Add New Issue</ModalHeader>
         <ModalCloseButton />

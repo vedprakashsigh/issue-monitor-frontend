@@ -1,4 +1,11 @@
-import React, { createContext, ReactNode, useContext, useReducer } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useReducer,
+  useEffect,
+} from "react";
+import { getCurrentUser, getToken } from "../utils/authUtils";
 
 export interface AuthState {
   user: { username: string; user_id: number } | null;
@@ -7,7 +14,7 @@ export interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  token: null,
+  token: getToken(), // Initialize token from localStorage on app load
 };
 
 type AuthAction =
@@ -42,6 +49,20 @@ const AuthContext = createContext<{
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+
+  // Effect to update user state on app load
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getCurrentUser();
+      if (user) {
+        dispatch({
+          type: "LOGIN",
+          payload: { user, token: getToken() as string },
+        });
+      }
+    };
+    fetchUser();
+  }, []);
 
   return (
     <AuthContext.Provider value={{ state, dispatch }}>

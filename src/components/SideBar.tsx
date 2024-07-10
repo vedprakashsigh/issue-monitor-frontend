@@ -1,62 +1,63 @@
-import { Button, Flex, Heading, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, VStack } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { useEffect, useState } from "react";
 
-import { useAuth } from "../context/AuthContext";
-import { useModal } from "../context/ModalContext";
 import { useProject } from "../context/ProjectContext";
 import { useTheme } from "../context/ThemeContext";
-
+import { useModal } from "../context/ModalContext";
+import { useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 import config from "../config";
 
-const Sidebar: React.FC = () => {
-  const [projects, setProjects] = useState<any[]>([]);
-  const { state } = useAuth();
-  const { setSelectedProjectId } = useProject();
-  const { openModal, modals } = useModal();
+interface SidebarProps {
+  showSidebar: boolean;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ showSidebar }: SidebarProps) => {
+  const { setSelectedProjectId, projects, setProjects } = useProject();
+  const { openModal } = useModal();
   const { selectedTheme } = useTheme();
+  const { state } = useAuth();
 
   useEffect(() => {
-    // Fetch the projects of the logged-in user
     const fetchProjects = async () => {
-      const token = state.token;
-      const apiUrl = config.apiUrl;
-      const user_id = state.user?.user_id as number;
+      if (projects === null) {
+        try {
+          if (state?.user?.user_id && state?.token) {
+            const apiUrl = `${config.apiUrl}/api/projects`;
+            const response = await fetch(
+              `${apiUrl}?user_id=${state.user.user_id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${state.token}`,
+                },
+              }
+            );
 
-      try {
-        const response = await fetch(
-          `${apiUrl}/api/projects?user_id=${user_id}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            if (!response.ok) {
+              throw new Error("Failed to fetch projects");
+            }
+
+            const fetchedProjects = await response.json();
+            setProjects(fetchedProjects);
           }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch projects");
+        } catch (error) {
+          console.error("Error fetching projects:", error);
         }
-
-        const data = await response.json();
-        setProjects(data);
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-        // Handle error as needed
       }
     };
-
     fetchProjects();
-  }, [state.token, state.user?.user_id, modals]);
+  }, []);
 
   return (
-    <Flex
-      as='aside'
-      direction='column'
-      p='4'
+    <Box
+      w={{ base: showSidebar ? "100%" : "0", md: "20%" }}
+      h={{ base: showSidebar ? "100vh" : "0", md: "100%" }}
       bg={selectedTheme.colors.sidebarBg}
-      w='20%'
-      h='100%'
+      color={selectedTheme.colors.sidebarText}
+      display={{ base: showSidebar ? "block" : "none", md: "block" }}
+      overflow='auto'
+      as='aside'
+      p='4'
       boxShadow='lg'
     >
       <Heading
@@ -69,10 +70,14 @@ const Sidebar: React.FC = () => {
         Projects
       </Heading>
       <VStack spacing='4' align='stretch' flex='1' overflowY='auto'>
-        {projects.map((project) => (
-          <Flex key={project.id} direction='row' justify='center'>
+        {projects?.map((project) => (
+          <Flex
+            key={project.id}
+            direction='row'
+            justify='center'
+            flexWrap='wrap'
+          >
             <Button
-              key={project.id}
               variant='ghost'
               colorScheme={selectedTheme.colors.buttonPrimary}
               color={selectedTheme.colors.sidebarProjectName}
@@ -81,20 +86,22 @@ const Sidebar: React.FC = () => {
             >
               {project.name}
             </Button>
-            <EditIcon
-              cursor='pointer'
-              my='auto'
-              color={selectedTheme.colors.editButton}
-              onClick={() => openModal("editProject", project.id)}
-              mx='1'
-            />
-            <DeleteIcon
-              cursor='pointer'
-              my='auto'
-              color={selectedTheme.colors.deleteButton}
-              onClick={() => openModal("deleteModal", project.id)}
-              mx='1'
-            />
+            <Flex>
+              <EditIcon
+                cursor='pointer'
+                my='auto'
+                color={selectedTheme.colors.editButton}
+                onClick={() => openModal("editProject", project.id)}
+                mx='1'
+              />
+              <DeleteIcon
+                cursor='pointer'
+                my='auto'
+                color={selectedTheme.colors.deleteButton}
+                onClick={() => openModal("deleteModal", project.id)}
+                mx='1'
+              />
+            </Flex>
           </Flex>
         ))}
       </VStack>
@@ -109,7 +116,8 @@ const Sidebar: React.FC = () => {
       >
         Add New Project
       </Button>
-    </Flex>
+    </Box>
+    // </Box>
   );
 };
 

@@ -1,44 +1,41 @@
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, Heading, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Text,
+  VStack,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
-import config from "../config";
 import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
 import { useProject } from "../context/ProjectContext";
 import { useTheme } from "../context/ThemeContext";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
-const MainSection: React.FC = () => {
+interface MainSectionProps {
+  showSidebar: boolean;
+}
+
+const MainSection: React.FC<MainSectionProps> = ({
+  showSidebar,
+}: MainSectionProps) => {
   const [project, setProject] = useState<any>(null);
   const { state } = useAuth();
-  const { selectedProjectId } = useProject();
-  const { openModal, modals } = useModal();
+  const { selectedProjectId, projects } = useProject();
   const { selectedTheme } = useTheme();
+  const { openModal, modals } = useModal();
+  const isSmallerScreen = useBreakpointValue({ base: true, md: false });
 
   useEffect(() => {
     if (selectedProjectId !== null) {
-      const fetchProject = async () => {
-        const token = state.token;
-        const apiUrl = config.apiUrl;
-        const response = await fetch(
-          `${apiUrl}/api/project?project_id=${selectedProjectId}&user_id=${state.user?.user_id}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setProject(data);
-        }
-      };
-      fetchProject();
+      setProject(projects?.find((project) => project.id === selectedProjectId));
     } else {
       setProject(null);
     }
-  }, [selectedProjectId, state.token, modals]);
+  }, [selectedProjectId, state, modals]);
 
   if (!project) {
     return (
@@ -54,6 +51,7 @@ const MainSection: React.FC = () => {
         boxShadow='md'
         bg={selectedTheme.colors.mainSectionBg}
         color={selectedTheme.colors.mainSectionText}
+        display={{ base: !showSidebar ? "block" : "none", md: "block" }}
       >
         <Box
           textAlign='center'
@@ -77,6 +75,7 @@ const MainSection: React.FC = () => {
       borderRadius='md'
       bg={selectedTheme.colors.mainSectionBg}
       color={selectedTheme.colors.mainSectionText}
+      display={{ base: !showSidebar ? "block" : "none", md: "block" }}
     >
       <Heading
         as='h2'
@@ -94,17 +93,20 @@ const MainSection: React.FC = () => {
       >
         {project.description}
       </Text>
-      <Button
-        onClick={() => openModal("addIssue", project.id)}
-        mt='4'
-        colorScheme='green'
-        alignSelf='center'
-        size='sm'
-      >
-        Add New Issue
-      </Button>
+      {!isSmallerScreen && (
+        <Button
+          onClick={() => openModal("addIssue", project.id)}
+          colorScheme='green'
+          alignSelf='center'
+          size={{ base: "xs", md: "md" }}
+          mx='auto'
+          my='4'
+        >
+          Add New Issue
+        </Button>
+      )}
       <VStack mt='8' align='stretch' spacing='4'>
-        {project?.issues.map((issue: any) => (
+        {project?.issues?.map((issue: any) => (
           <Box
             key={issue.id}
             borderWidth='1px'
@@ -138,10 +140,10 @@ const MainSection: React.FC = () => {
                 onClick={() => openModal("editIssue", project.id, issue.id)}
                 color={selectedTheme.colors.editButton}
                 leftIcon={<EditIcon />}
-                variant='outline'
-                size='sm'
+                variant='ghost'
+                size={{ base: "xs", md: "md" }}
                 mx='2'
-                boxShadow='md'
+                boxShadow={{ base: "sm", md: "md" }}
               >
                 Edit Issue
               </Button>
@@ -149,10 +151,10 @@ const MainSection: React.FC = () => {
                 onClick={() => openModal("deleteModal", project.id, issue.id)}
                 color={selectedTheme.colors.deleteButton}
                 leftIcon={<DeleteIcon />}
-                variant='outline'
-                size='sm'
+                variant='primary'
+                size={{ base: "xs", md: "md" }}
                 mx='2'
-                boxShadow='md'
+                boxShadow={{ base: "sm", md: "md" }}
               >
                 Delete Issue
               </Button>
@@ -160,6 +162,17 @@ const MainSection: React.FC = () => {
           </Box>
         ))}
       </VStack>
+      {isSmallerScreen && (
+        <Button
+          onClick={() => openModal("addIssue", project.id)}
+          mt='4'
+          colorScheme='green'
+          alignSelf='center'
+          size={{ base: "sm", md: "md" }}
+        >
+          Add New Issue
+        </Button>
+      )}
     </Flex>
   );
 };

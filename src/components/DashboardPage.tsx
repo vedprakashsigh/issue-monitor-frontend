@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
-import { ModalProvider } from "../context/ModalContext";
-import { ProjectProvider } from "../context/ProjectContext";
 import { useTheme } from "../context/ThemeContext";
 import { getCurrentUser } from "../utils/authUtils";
 
@@ -21,6 +19,7 @@ import DeleteModal from "./modals/DeleteModal";
 
 const DashboardPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
   const navigate = useNavigate();
   const { state, dispatch } = useAuth();
   const { selectedTheme } = useTheme();
@@ -46,30 +45,35 @@ const DashboardPage: React.FC = () => {
   }
 
   return (
-    <ProjectProvider>
-      <ModalProvider>
-        <Flex
-          direction='column'
-          h='100vh'
-          bg={selectedTheme.colors.background}
-          overflow='hidden'
+    <Flex
+      direction='column'
+      h='100vh'
+      bg={selectedTheme.colors.background}
+      overflow='hidden'
+      w='100vw'
+    >
+      <Header showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        flex='1'
+        overflow='hidden'
+      >
+        <Sidebar showSidebar={showSidebar} />
+        <Box
+          w={{ base: "100%", md: "80%" }}
+          p={{ base: "2", md: "4" }}
+          overflow='auto'
         >
-          <Header />
-          <Flex direction='row' flex='1' overflow='hidden'>
-            <Sidebar />
-            <Box w='80%' p='4' overflow='auto'>
-              <MainSection />
-            </Box>
-          </Flex>
-          <Footer />
-          <AddProjectModal />
-          <AddIssueModal />
-          <EditProjectModal />
-          <EditIssueModal />
-          <DeleteModal />
-        </Flex>
-      </ModalProvider>
-    </ProjectProvider>
+          <MainSection showSidebar={showSidebar} />
+        </Box>
+      </Flex>
+      <Footer />
+      <AddProjectModal />
+      <AddIssueModal />
+      <EditProjectModal />
+      <EditIssueModal />
+      <DeleteModal />
+    </Flex>
   );
 };
 
