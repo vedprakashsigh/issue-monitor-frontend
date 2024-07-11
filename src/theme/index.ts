@@ -58,7 +58,7 @@ const commonStyles = {
 // Light theme
 const lightTheme = extendTheme({
   colors: {
-    background: "#F2F2F2",
+    background: "#F1F1F1",
     buttonPrimary: "#FFA700",
     buttonSecondary: "#EEEEEE",
     deleteButton: "#FF0000",
@@ -69,7 +69,7 @@ const lightTheme = extendTheme({
     iconColor: "#808080",
     inputBg: "#FFFFFF",
     inputText: "#333333",
-    issueBg: "#FCFCFC",
+    issueBg: "#F4F4F4",
     issueHeading: "#333333",
     issueStatus: "#8ABF96",
     issueText: "#808080",

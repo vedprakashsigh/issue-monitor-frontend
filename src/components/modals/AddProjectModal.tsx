@@ -28,13 +28,20 @@ const projectSchema = z.object({
 });
 
 const AddProjectModal: React.FC = () => {
-  const { modals, closeModal } = useModal();
+  const { modals, closeModal, forceUpdate } = useModal();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const toast = useToast();
   const { setSelectedProjectId } = useProject();
   const { state } = useAuth();
   const { selectedTheme } = useTheme(); // Use selectedTheme from ThemeContext
+
+  const handleCloseModal = () => {
+    setName("");
+    setDescription("");
+    forceUpdate();
+    closeModal("addProject");
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -69,9 +76,7 @@ const AddProjectModal: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
-      setName("");
-      setDescription("");
-      closeModal("addProject");
+      handleCloseModal();
     } catch (error: any) {
       toast({
         title: "Error",
@@ -84,7 +89,7 @@ const AddProjectModal: React.FC = () => {
   };
 
   return (
-    <Modal isOpen={modals.addProject} onClose={() => closeModal("addProject")}>
+    <Modal isOpen={modals.addProject} onClose={handleCloseModal}>
       <ModalOverlay />
       <ModalContent
         bg={selectedTheme.colors.modalBg}
@@ -126,7 +131,7 @@ const AddProjectModal: React.FC = () => {
         >
           <Button
             variant='ghost'
-            onClick={() => closeModal("addProject")}
+            onClick={handleCloseModal}
             _hover={{ bg: selectedTheme.colors.buttonSecondary }}
             color={selectedTheme.colors.buttonPrimary}
           >

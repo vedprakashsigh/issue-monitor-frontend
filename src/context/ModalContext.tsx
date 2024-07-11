@@ -1,6 +1,10 @@
-// ModalContext.tsx
-
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface ModalContextProps {
   modals: Record<string, boolean>;
@@ -8,6 +12,7 @@ interface ModalContextProps {
   closeModal: (modalName: string) => void;
   projectId: number | null; // Add projectId to ModalContextProps
   issueId: number | null; // Add projectId to ModalContextProps
+  forceUpdate: () => void;
 }
 
 const ModalContext = createContext<ModalContextProps | undefined>(undefined);
@@ -26,6 +31,17 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
   const [modals, setModals] = useState<Record<string, boolean>>({});
   const [projectId, setProjectId] = useState<number | null>(null); // State for projectId
   const [issueId, setIssueId] = useState<number | null>(null); // State for projectId
+  const [modalUpdateTrigger, setModalUpdateTrigger] = useState(false);
+  const forceUpdate = () => {
+    setModalUpdateTrigger(!modalUpdateTrigger);
+  };
+
+  useEffect(() => {
+    const update = () => {
+      setModals({ ...modals });
+    };
+    setTimeout(() => update(), 100);
+  }, [modalUpdateTrigger]);
 
   const openModal = (
     modalName: string,
@@ -59,6 +75,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
     closeModal,
     projectId,
     issueId,
+    forceUpdate,
   };
 
   return (

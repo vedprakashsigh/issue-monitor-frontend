@@ -29,13 +29,21 @@ const issueSchema = z.object({
 });
 
 const AddIssueModal: React.FC = () => {
-  const { modals, closeModal, projectId } = useModal();
+  const { modals, closeModal, projectId, forceUpdate } = useModal();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("Open");
   const toast = useToast();
   const { selectedTheme } = useTheme();
   const { state } = useAuth();
+
+  const handleCloseModal = () => {
+    setTitle("");
+    setDescription("");
+    setStatus("Open");
+    forceUpdate();
+    closeModal("addIssue");
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -67,10 +75,7 @@ const AddIssueModal: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
-      setTitle("");
-      setDescription("");
-      setStatus("Open");
-      closeModal("addIssue");
+      handleCloseModal();
     } catch (error: any) {
       toast({
         title: "Error",
@@ -83,7 +88,7 @@ const AddIssueModal: React.FC = () => {
   };
 
   return (
-    <Modal isOpen={modals.addIssue} onClose={() => closeModal("addIssue")}>
+    <Modal isOpen={modals.addIssue} onClose={handleCloseModal}>
       <ModalOverlay />
       <ModalContent
         bg={selectedTheme.colors.modalBg}
@@ -156,7 +161,7 @@ const AddIssueModal: React.FC = () => {
         >
           <Button
             variant='ghost'
-            onClick={() => closeModal("addIssue")}
+            onClick={handleCloseModal}
             _hover={{ bg: selectedTheme.colors.buttonSecondary }}
             color={selectedTheme.colors.buttonPrimary}
           >

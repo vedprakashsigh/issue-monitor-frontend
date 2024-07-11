@@ -18,10 +18,15 @@ import { useTheme } from "../../context/ThemeContext";
 const DeleteModal: React.FC = () => {
   const toast = useToast();
   const { state } = useAuth();
-  const { modals, closeModal, projectId, issueId } = useModal();
+  const { modals, closeModal, projectId, issueId, forceUpdate } = useModal();
   const { selectedTheme } = useTheme();
   const title = issueId ? "Issue" : "Project";
   const id = issueId ? issueId : projectId;
+
+  const handleCloseModal = () => {
+    forceUpdate();
+    closeModal("deleteModal");
+  };
 
   const handleDelete = async () => {
     try {
@@ -43,7 +48,7 @@ const DeleteModal: React.FC = () => {
         isClosable: true,
       });
 
-      closeModal("deleteModal");
+      handleCloseModal();
     } catch (error: any) {
       toast({
         title: "Error",
@@ -56,10 +61,7 @@ const DeleteModal: React.FC = () => {
   };
 
   return (
-    <Modal
-      isOpen={modals.deleteModal}
-      onClose={() => closeModal("deleteModal")}
-    >
+    <Modal isOpen={modals.deleteModal} onClose={handleCloseModal}>
       <ModalOverlay />
       <ModalContent
         bg={selectedTheme.colors.modalBg}
@@ -71,7 +73,8 @@ const DeleteModal: React.FC = () => {
         <ModalHeader borderBottomWidth='1px'>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          Are you sure you want to delete this {title.toLowerCase()}?
+          Are you sure you want to delete this {title.toLowerCase()}{" "}
+          {title === "Project" && "and all its issues"}?
         </ModalBody>
 
         <ModalFooter>
@@ -85,7 +88,7 @@ const DeleteModal: React.FC = () => {
           </Button>
           <Button
             variant='ghost'
-            onClick={() => closeModal("deleteModal")}
+            onClick={handleCloseModal}
             color={selectedTheme.colors.buttonPrimary}
           >
             Cancel

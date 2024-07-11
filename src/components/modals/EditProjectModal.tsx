@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -28,13 +28,43 @@ const projectSchema = z.object({
 });
 
 const EditProjectModal: React.FC = () => {
-  const { modals, closeModal, projectId } = useModal();
+  const { modals, closeModal, projectId, forceUpdate } = useModal();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const toast = useToast();
   const { setSelectedProjectId } = useProject();
   const { state } = useAuth();
   const { selectedTheme } = useTheme();
+
+  useEffect(() => {
+    const fetchIssue = async () => {
+      if (projectId) {
+        const response = await fetch(
+          `${config.apiUrl}/api/project?project_id=${projectId}&user_id=${state.user?.user_id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${state.token}`,
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setName(data.name);
+          setDescription(data.description);
+        }
+      }
+    };
+    fetchIssue();
+  }, [projectId]);
+
+  const handleCloseModal = () => {
+    setName("");
+    setDescription("");
+    forceUpdate();
+    closeModal("editProject");
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -69,10 +99,7 @@ const EditProjectModal: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
-      setName("");
-      setDescription("");
-
-      closeModal("editProject");
+      handleCloseModal();
     } catch (error: any) {
       toast({
         title: "Error",
@@ -85,10 +112,7 @@ const EditProjectModal: React.FC = () => {
   };
 
   return (
-    <Modal
-      isOpen={modals.editProject}
-      onClose={() => closeModal("editProject")}
-    >
+    <Modal isOpen={modals.editProject} onClose={handleCloseModal}>
       <ModalOverlay />
       <ModalContent
         bg={selectedTheme.colors.modalBg}
@@ -130,7 +154,7 @@ const EditProjectModal: React.FC = () => {
         >
           <Button
             variant='ghost'
-            onClick={() => closeModal("editProject")}
+            onClick={handleCloseModal}
             _hover={{ bg: selectedTheme.colors.buttonSecondary }}
             color={selectedTheme.colors.buttonPrimary}
           >

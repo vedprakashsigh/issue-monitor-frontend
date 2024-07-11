@@ -15,6 +15,7 @@ import config from "../config";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext"; // Import useTheme hook
 import { getCurrentUser, setToken } from "../utils/authUtils"; // Import setCurrentUser utility
+import ThemeToggle from "./ThemeToggle";
 
 const schema = z.object({
   username: z.string().min(4, "Username must be at least 4 characters"),
@@ -102,16 +103,19 @@ const LoginPage: React.FC = () => {
       bg={selectedTheme.colors.background} // Use selectedTheme's background color
       color={selectedTheme.colors.text} // Use selectedTheme's text color
     >
+      <ThemeToggle style={{ position: "absolute", top: "8px", right: "4px" }} />
+
       <Box
         p='8'
         borderWidth='1px'
         borderRadius='lg'
         boxShadow='lg'
-        bg={selectedTheme.colors.primary} // Use selectedTheme's primary color for background
-        color={selectedTheme.colors.text} // Use selectedTheme's text color
+        bg={selectedTheme.colors.modalBg}
+        color={selectedTheme.colors.modalContent}
+        my='auto'
+        mx='4'
       >
         <Heading as='h2' mb='6' color={selectedTheme.colors.text}>
-          {" "}
           {/* Use selectedTheme's text color */}
           Login
         </Heading>
@@ -140,17 +144,23 @@ const LoginPage: React.FC = () => {
               borderColor={selectedTheme.colors.text} // Use selectedTheme's text color for border
             />
           </FormControl>
-          <Button m='4' type='submit' color={selectedTheme.colors.accent}>
-            {" "}
+          <Button
+            m='2'
+            type='submit'
+            color={selectedTheme.colors.buttonPrimary}
+            variant='ghost'
+            boxShadow='md'
+          >
             {/* Use selectedTheme's accent color */}
             Login
           </Button>
           <Button
-            m='4'
-            color={selectedTheme.colors.secondary}
+            m='2'
+            color={selectedTheme.colors.editButton}
             onClick={handleNavigateToRegister}
+            variant='ghost'
+            boxShadow='md'
           >
-            {" "}
             {/* Use selectedTheme's secondary color */}
             Register
           </Button>

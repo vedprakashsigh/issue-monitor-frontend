@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import config from "../config";
 import { useTheme } from "../context/ThemeContext"; // Import useTheme hook
+import ThemeToggle from "./ThemeToggle";
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -89,14 +90,18 @@ const RegisterPage: React.FC = () => {
       h='100vh'
       bg={selectedTheme.colors.background}
       color={selectedTheme.colors.text}
+      direction='column'
     >
+      <ThemeToggle style={{ position: "absolute", top: "8px", right: "4px" }} />
       <Box
         p='8'
         borderWidth='1px'
         borderRadius='lg'
         boxShadow='lg'
-        bg={selectedTheme.colors.primary}
-        color={selectedTheme.colors.text}
+        bg={selectedTheme.colors.modalBg}
+        color={selectedTheme.colors.modalContent}
+        my='auto'
+        mx='4'
       >
         <Heading as='h2' mb='6' color={selectedTheme.colors.text}>
           Register
@@ -146,13 +151,21 @@ const RegisterPage: React.FC = () => {
               borderColor={selectedTheme.colors.text}
             />
           </FormControl>
-          <Button m='4' type='submit' color={selectedTheme.colors.accent}>
+          <Button
+            m='2'
+            type='submit'
+            color={selectedTheme.colors.buttonPrimary}
+            variant='ghost'
+            boxShadow='md'
+          >
             Register
           </Button>
           <Button
-            m='4'
-            color={selectedTheme.colors.secondary}
+            m='2'
+            color={selectedTheme.colors.editButton}
             onClick={handleNavigateToLogin}
+            variant='ghost'
+            boxShadow='md'
           >
             Login
           </Button>
