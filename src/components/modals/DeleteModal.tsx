@@ -18,9 +18,10 @@ import { useTheme } from "../../context/ThemeContext";
 const DeleteModal: React.FC = () => {
   const toast = useToast();
   const { state } = useAuth();
-  const { modals, closeModal, projectId, issueId, forceUpdate } = useModal();
+  const { modals, closeModal, projectId, issueId, commentId, forceUpdate } =
+    useModal();
   const { selectedTheme } = useTheme();
-  const title = issueId ? "Issue" : "Project";
+  const title = commentId ? "Comment" : issueId ? "Issue" : "Project";
   const id = issueId ? issueId : projectId;
 
   const handleCloseModal = () => {
@@ -74,6 +75,7 @@ const DeleteModal: React.FC = () => {
         <ModalCloseButton />
         <ModalBody>
           Are you sure you want to delete this {title.toLowerCase()}{" "}
+          {title === "Issue" && "and all its comments"}
           {title === "Project" && "and all its issues"}?
         </ModalBody>
 

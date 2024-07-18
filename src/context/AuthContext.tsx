@@ -8,7 +8,7 @@ import React, {
 import { getCurrentUser, getToken } from "../utils/authUtils";
 
 export interface AuthState {
-  user: { username: string; user_id: number } | null;
+  user: { username: string; user_id: number; role: string } | null;
   token: string | null;
 }
 
@@ -20,7 +20,10 @@ const initialState: AuthState = {
 type AuthAction =
   | {
       type: "LOGIN";
-      payload: { user: { username: string; user_id: number }; token: string };
+      payload: {
+        user: { username: string; user_id: number; role: string };
+        token: string;
+      };
     }
   | { type: "LOGOUT" };
 

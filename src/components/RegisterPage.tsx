@@ -6,6 +6,7 @@ import {
   FormLabel,
   Heading,
   Input,
+  Text,
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -92,7 +93,9 @@ const RegisterPage: React.FC = () => {
       color={selectedTheme.colors.text}
       direction='column'
     >
-      <ThemeToggle style={{ position: "absolute", top: "8px", right: "4px" }} />
+      <ThemeToggle
+        style={{ position: "absolute", top: "0.1rem", right: "0rem" }}
+      />
       <Box
         p='8'
         borderWidth='1px'
@@ -170,6 +173,25 @@ const RegisterPage: React.FC = () => {
             Login
           </Button>
         </form>
+        <Box
+          mt='4'
+          p='4'
+          bg={selectedTheme.colors.modalBg}
+          color={selectedTheme.colors.modalContent}
+          borderRadius='md'
+          borderWidth='1px'
+          boxShadow='md'
+        >
+          <Text fontWeight='bold'>Note:</Text>
+          <Text fontSize='0.75rem'>
+            1. To obtain an <strong>Admin</strong> role, please register with an
+            email ending in <strong>@admin.com</strong>.
+          </Text>
+          <Text fontSize='0.75rem'>
+            2. To obtain a <strong>Project Manager</strong> role, please
+            register with an email ending in <strong>@manager.com</strong>.
+          </Text>
+        </Box>
       </Box>
     </Flex>
   );

@@ -13,7 +13,8 @@ import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
 import { useProject } from "../context/ProjectContext";
 import { useTheme } from "../context/ThemeContext";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { Link } from "react-router-dom";
 
 interface MainSectionProps {
   showSidebar: boolean;
@@ -60,6 +61,18 @@ const MainSection: React.FC<MainSectionProps> = ({
         >
           Select a project to see details
         </Box>
+        {state.user?.role === "admin" && (
+          <Flex
+            color={selectedTheme.colors.buttonPrimary}
+            w='12rem'
+            mx='auto'
+            justify='ceter'
+            boxShadow={{ base: "sm", md: "md" }}
+            px='auto'
+          >
+            <Link to='/admin'>Go to Admin Dashboard</Link>
+          </Flex>
+        )}
       </Flex>
     );
   }
@@ -93,6 +106,23 @@ const MainSection: React.FC<MainSectionProps> = ({
       >
         {project.description}
       </Text>
+      {state.user?.role !== "member" && (
+        <Flex>
+          <Button
+            onClick={() => openModal("addUser")}
+            color={selectedTheme.colors.buttonPrimary}
+            variant='ghost'
+            justifySelf='center'
+            w='12rem'
+            mx='4'
+            boxShadow={{ base: "sm", md: "md" }}
+            px='4'
+          >
+            Add Users
+          </Button>
+        </Flex>
+      )}
+
       {!isSmallerScreen && (
         <Button
           onClick={() => openModal("addIssue", project.id)}
@@ -157,6 +187,12 @@ const MainSection: React.FC<MainSectionProps> = ({
                 boxShadow={{ base: "sm", md: "md" }}
               >
                 Delete Issue
+              </Button>
+              <Button
+                leftIcon={<AddIcon />}
+                onClick={() => openModal("comments", project.id, issue.id)}
+              >
+                Comments
               </Button>
             </Flex>
           </Box>

@@ -8,10 +8,16 @@ import React, {
 
 interface ModalContextProps {
   modals: Record<string, boolean>;
-  openModal: (modalName: string, projectId?: number, issueId?: number) => void; // Updated openModal function
+  openModal: (
+    modalName: string,
+    projectId?: number,
+    issueId?: number,
+    commentId?: number
+  ) => void; // Updated openModal function
   closeModal: (modalName: string) => void;
   projectId: number | null; // Add projectId to ModalContextProps
   issueId: number | null; // Add projectId to ModalContextProps
+  commentId: number | null; // Add projectId to ModalContextProps
   forceUpdate: () => void;
 }
 
@@ -30,7 +36,8 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [modals, setModals] = useState<Record<string, boolean>>({});
   const [projectId, setProjectId] = useState<number | null>(null); // State for projectId
-  const [issueId, setIssueId] = useState<number | null>(null); // State for projectId
+  const [issueId, setIssueId] = useState<number | null>(null); // State for issueId
+  const [commentId, setCommentId] = useState<number | null>(null); // State for commentId
   const [modalUpdateTrigger, setModalUpdateTrigger] = useState(false);
   const forceUpdate = () => {
     setModalUpdateTrigger(!modalUpdateTrigger);
@@ -46,7 +53,8 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
   const openModal = (
     modalName: string,
     projectId?: number,
-    issueId?: number
+    issueId?: number,
+    commentId?: number
   ) => {
     setModals((prevModals) => ({
       ...prevModals,
@@ -58,6 +66,9 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
     if (issueId !== undefined) {
       setIssueId(issueId);
     }
+    if (commentId !== undefined) {
+      setCommentId(commentId);
+    }
   };
 
   const closeModal = (modalName: string) => {
@@ -67,6 +78,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
     }));
     setProjectId(null);
     setIssueId(null);
+    setCommentId(null);
   };
 
   const modalContextValue: ModalContextProps = {
@@ -75,6 +87,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
     closeModal,
     projectId,
     issueId,
+    commentId,
     forceUpdate,
   };
 
