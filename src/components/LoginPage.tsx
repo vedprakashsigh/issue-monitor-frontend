@@ -62,6 +62,7 @@ const LoginPage: React.FC = () => {
           user: {
             username: user?.username as string,
             user_id: user?.user_id as number,
+            role: user?.role as string,
           },
           token: data.access_token,
         },

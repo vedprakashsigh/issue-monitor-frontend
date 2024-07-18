@@ -1,9 +1,4 @@
-import {
-  ArrowBackIcon,
-  CloseIcon,
-  HamburgerIcon,
-  SmallCloseIcon,
-} from "@chakra-ui/icons";
+import { ArrowBackIcon, HamburgerIcon, SmallCloseIcon } from "@chakra-ui/icons";
 import { Button, Flex, Heading, IconButton, Spacer } from "@chakra-ui/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -77,7 +72,7 @@ const Header: React.FC<HeaderProps> = ({
         <Heading as='h5' size={{ base: "xs", md: "md" }} m='auto'>
           {state.user?.username}
         </Heading>
-        <ThemeToggle />
+        <ThemeToggle style={{}} />
         <Button
           colorScheme='red'
           onClick={handleLogout}
