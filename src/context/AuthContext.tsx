@@ -5,7 +5,12 @@ import React, {
   useReducer,
   useEffect,
 } from "react";
-import { getCurrentUser, getToken } from "../utils/authUtils";
+import {
+  getCurrentUser,
+  getToken,
+  removeToken,
+  setToken,
+} from "../utils/authUtils";
 
 export interface AuthState {
   user: { username: string; user_id: number; role: string } | null;
@@ -30,12 +35,14 @@ type AuthAction =
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
     case "LOGIN":
+      setToken(action.payload.token);
       return {
         ...state,
         user: action.payload.user,
         token: action.payload.token,
       };
     case "LOGOUT":
+      removeToken();
       return { ...state, user: null, token: null };
     default:
       return state;
