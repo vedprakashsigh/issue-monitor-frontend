@@ -29,6 +29,7 @@ const UsersListModal: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        if (!state.token) return;
         const response = await fetch(`${config.apiUrl}/api/users`, {
           headers: {
             Authorization: `Bearer ${state.token}`,
