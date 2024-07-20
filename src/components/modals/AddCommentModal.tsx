@@ -36,6 +36,7 @@ const AddCommentModal: React.FC = () => {
     setContent("");
     forceUpdate();
     closeModal("addComment");
+    closeModal("comments");
   };
 
   const handleSubmit = async (event: React.FormEvent) => {

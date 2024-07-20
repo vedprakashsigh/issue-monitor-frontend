@@ -22,11 +22,12 @@ const DeleteModal: React.FC = () => {
     useModal();
   const { selectedTheme } = useTheme();
   const title = commentId ? "Comment" : issueId ? "Issue" : "Project";
-  const id = issueId ? issueId : projectId;
+  const id = commentId ? commentId : issueId ? issueId : projectId;
 
   const handleCloseModal = () => {
     forceUpdate();
     closeModal("deleteModal");
+    closeModal("comments");
   };
 
   const handleDelete = async () => {

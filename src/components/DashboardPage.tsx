@@ -11,16 +11,6 @@ import Header from "./Header";
 import MainSection from "./MainSection";
 import Sidebar from "./SideBar";
 
-import AddIssueModal from "./modals/AddIssueModal";
-import AddProjectModal from "./modals/AddProjectModal";
-import EditIssueModal from "./modals/EditIssueModal";
-import EditProjectModal from "./modals/EditProjectModal";
-import DeleteModal from "./modals/DeleteModal";
-import AddUserModal from "./modals/AddUserModal";
-import AddCommentModal from "./modals/AddCommentModal";
-import EditCommentModal from "./modals/EditCommentModal";
-import CommentsModal from "./modals/CommentModal";
-
 const DashboardPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showSidebar, setShowSidebar] = useState(false);
@@ -72,15 +62,6 @@ const DashboardPage: React.FC = () => {
         </Box>
       </Flex>
       <Footer />
-      <AddProjectModal />
-      <AddCommentModal />
-      <AddIssueModal />
-      <AddUserModal />
-      <CommentsModal />
-      <DeleteModal />
-      <EditProjectModal />
-      <EditCommentModal />
-      <EditIssueModal />
     </Flex>
   );
 };

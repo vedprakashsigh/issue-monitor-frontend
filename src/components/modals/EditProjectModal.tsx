@@ -38,6 +38,9 @@ const EditProjectModal: React.FC = () => {
 
   useEffect(() => {
     const fetchIssue = async () => {
+      if (!modals.editProject) {
+        return;
+      }
       if (projectId) {
         const response = await fetch(
           `${config.apiUrl}/api/project?project_id=${projectId}&user_id=${state.user?.user_id}`,

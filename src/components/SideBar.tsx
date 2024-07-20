@@ -87,37 +87,53 @@ const Sidebar: React.FC<SidebarProps> = ({ showSidebar }: SidebarProps) => {
               {project.name}
             </Button>
             <Flex>
-              <EditIcon
-                cursor='pointer'
-                my='auto'
-                color={selectedTheme.colors.editButton}
-                onClick={() => openModal("editProject", project.id)}
-                mx='1'
-              />
-              <DeleteIcon
-                cursor='pointer'
-                my='auto'
-                color={selectedTheme.colors.deleteButton}
-                onClick={() => openModal("deleteModal", project.id)}
-                mx='1'
-              />
+              {state?.user?.role !== "member" && (
+                <EditIcon
+                  cursor='pointer'
+                  my='auto'
+                  color={selectedTheme.colors.editButton}
+                  onClick={() => openModal("editProject", project.id)}
+                  mx='1'
+                />
+              )}
+              {state?.user?.role === "admin" && (
+                <DeleteIcon
+                  cursor='pointer'
+                  my='auto'
+                  color={selectedTheme.colors.deleteButton}
+                  onClick={() => openModal("deleteModal", project.id)}
+                  mx='1'
+                />
+              )}
             </Flex>
           </Flex>
         ))}
       </VStack>
+      {state?.user?.role !== "member" && (
+        <Button
+          mt='4'
+          onClick={() => openModal("addProject")}
+          colorScheme={selectedTheme.colors.buttonPrimary}
+          color={selectedTheme.colors.sidebarButtonText}
+          variant='solid'
+          size='sm'
+          w='full'
+        >
+          Add New Project
+        </Button>
+      )}
       <Button
         mt='4'
-        onClick={() => openModal("addProject")}
+        onClick={() => openModal("usersList")}
         colorScheme={selectedTheme.colors.buttonPrimary}
         color={selectedTheme.colors.sidebarButtonText}
         variant='solid'
         size='sm'
         w='full'
       >
-        Add New Project
+        Users List
       </Button>
     </Box>
-    // </Box>
   );
 };
 

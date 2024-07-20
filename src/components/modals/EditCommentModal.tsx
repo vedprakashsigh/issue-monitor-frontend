@@ -37,14 +37,11 @@ const EditCommentModal: React.FC = () => {
   useEffect(() => {
     if (commentId === null) return;
     const fetchComment = async () => {
-      const res = await fetch(
-        `${config.apiUrl}/api/comment?comment_id=${commentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${state?.token}`,
-          },
-        }
-      );
+      const res = await fetch(`${config.apiUrl}/api/comment?id=${commentId}`, {
+        headers: {
+          Authorization: `Bearer ${state?.token}`,
+        },
+      });
       const data = await res.json();
       setContent(data.content);
     };
@@ -55,6 +52,7 @@ const EditCommentModal: React.FC = () => {
     setContent("");
     forceUpdate();
     closeModal("editComment");
+    closeModal("comments");
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -70,8 +68,8 @@ const EditCommentModal: React.FC = () => {
         issue_id: issueId,
       });
       const apiUrl = config.apiUrl;
-      const response = await fetch(`${apiUrl}/api/comments/${commentId}`, {
-        method: "PUT",
+      const response = await fetch(`${apiUrl}/api/comment?id=${commentId}`, {
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${state?.token}`,
           "Content-Type": "application/json",
