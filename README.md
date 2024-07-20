@@ -41,7 +41,7 @@ To set up the frontend locally, follow these steps:
 4. **Start the Development Server:**
 
    ```bash
-   npm start
+   npm run dev
    ```
 
 5. **Open the Application:**
@@ -83,4 +83,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
-For more detailed documentation, please refer to the [Backend README](https://github.com/vedprakashsigh/issue-monitor-backend/README.md).
+For more detailed documentation, please refer to the [Backend README](https://github.com/vedprakashsigh/issue-monitor-backend/).
