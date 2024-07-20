@@ -1,30 +1,86 @@
-# React + TypeScript + Vite
+# Issue Monitor - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+The frontend of the Issue Monitor web application is developed using React, Chakra UI, and TypeScript. It provides a user interface for managing projects, issues, and users. Users can interact with various components, such as modals and forms, to perform actions like adding or removing users and issues.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **User Authentication:** Users can register and log in to access the application.
+- **Project Management:** Users can view, add, edit, and delete projects.
+- **Issue Tracking:** Users can create, view, edit, and delete issues within projects.
+- **User Management:** Admins and Project Managers can add or remove users from projects.
+- **Responsive Design:** The application is designed to be responsive across different screen sizes.
+- **Theming:** Supports both light and dark themes.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Installation
 
-- Configure the top-level `parserOptions` property like this:
+To set up the frontend locally, follow these steps:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+1. **Clone the Repository:**
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+   ```bash
+   git clone https://github.com/vedprakashsigh/issue-monitor-frontend
+   cd issue-monitor-frontend/
+   ```
+
+2. **Install Dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Create a `.env` File:**
+
+   Create a `.env` file in the root of the frontend directory and add the following configuration:
+
+   ```env
+   REACT_APP_API_URL=<your-backend-api-url>
+   ```
+
+4. **Start the Development Server:**
+
+   ```bash
+   npm start
+   ```
+
+5. **Open the Application:**
+
+   Navigate to `http://localhost:5173` in your browser.
+
+## Components
+
+- **MainSection:** Displays the selected project’s details and issues.
+- **AddUserModal:** Modal for adding users to a project.
+- **RemoveUserModal:** Modal for removing users from a project.
+- **UsersListModal:** Modal displaying all registered users.
+- **IssueList:** Displays a list of issues within a project.
+- **IssueItem:** Represents a single issue with actions to edit, delete, or comment.
+
+## Theming
+
+The application uses Chakra UI for styling and supports light and dark themes. The themes are defined in the `theme.ts` file.
+
+## Contexts
+
+- **AuthContext:** Manages user authentication state.
+- **ModalContext:** Manages the state of modals.
+- **ProjectContext:** Manages the state related to projects and issues.
+- **ThemeContext:** Provides the selected theme across the application.
+
+## Contributing
+
+If you would like to contribute to the frontend, please follow these guidelines:
+
+- Fork the repository.
+- Create a new branch for your feature or bugfix.
+- Make your changes and test thoroughly.
+- Submit a pull request with a description of your changes.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+For more detailed documentation, please refer to the [Backend README](https://github.com/vedprakashsigh/issue-monitor-backend/README.md).
