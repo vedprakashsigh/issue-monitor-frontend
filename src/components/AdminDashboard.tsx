@@ -22,6 +22,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import config from "../config";
+import Loader from "./Loader";
 
 interface User {
   id: number;
@@ -131,7 +132,7 @@ const AdminDashboard: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   if (state.user?.role !== "admin") {

@@ -42,7 +42,7 @@ const RemoveUserModal: React.FC = () => {
   useEffect(() => {
     const fetchProjectMembers = async () => {
       try {
-        if (selectedProjectId === null) return;
+        if (selectedProjectId === null || state?.token === null) return;
         const response = await fetch(
           `${config.apiUrl}/api/projects/${selectedProjectId}/users`,
           {

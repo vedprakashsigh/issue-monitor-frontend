@@ -43,7 +43,7 @@ const AddUserModal: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        if (selectedProjectId === null) return;
+        if (selectedProjectId === null || state?.token === null) return;
         const [allUsersResponse, projectMembersResponse] = await Promise.all([
           fetch(`${config.apiUrl}/api/users`, {
             headers: {

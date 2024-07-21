@@ -1,21 +1,22 @@
 import { Box, Button, Flex, Heading, Text, VStack } from "@chakra-ui/react";
 import { ChatIcon, DeleteIcon, EditIcon, WarningIcon } from "@chakra-ui/icons";
+import { useTheme } from "../context/ThemeContext";
+import { useModal } from "../context/ModalContext";
 
 interface IssueListProps {
   issues: any[];
   projectId: number;
-  openModal: (modal: string, projectId: number, issueId?: number) => void;
-  selectedTheme: any;
   isSmallerScreen: boolean;
 }
 
 const IssueList: React.FC<IssueListProps> = ({
   issues,
   projectId,
-  openModal,
-  selectedTheme,
   isSmallerScreen,
 }) => {
+  const { selectedTheme } = useTheme();
+  const { openModal } = useModal();
+
   return (
     <VStack mt='8' align='stretch' spacing='4'>
       {issues?.map((issue) => (

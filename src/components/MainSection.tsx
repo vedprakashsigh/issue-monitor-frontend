@@ -1,7 +1,6 @@
 import { Flex, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useModal } from "../context/ModalContext";
 import { useProject } from "../context/ProjectContext";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
@@ -17,7 +16,6 @@ const MainSection: React.FC<MainSectionProps> = ({ showSidebar }) => {
   const { state } = useAuth();
   const { selectedProjectId, projects } = useProject();
   const { selectedTheme } = useTheme();
-  const { openModal, modals } = useModal();
   const isSmallerScreen = useBreakpointValue({ base: true, md: false });
 
   useEffect(() => {
@@ -26,7 +24,7 @@ const MainSection: React.FC<MainSectionProps> = ({ showSidebar }) => {
     } else {
       setProject(null);
     }
-  }, [selectedProjectId, state, modals]);
+  }, [selectedProjectId, state, projects]);
 
   if (!project) {
     return (
@@ -79,15 +77,10 @@ const MainSection: React.FC<MainSectionProps> = ({ showSidebar }) => {
       <ProjectDetails
         project={project}
         isSmallerScreen={isSmallerScreen as boolean}
-        openModal={openModal}
-        selectedTheme={selectedTheme}
-        userRole={state.user?.role}
       />
       <IssueList
         issues={project?.issues}
         projectId={project.id}
-        openModal={openModal}
-        selectedTheme={selectedTheme}
         isSmallerScreen={isSmallerScreen as boolean}
       />
     </Flex>

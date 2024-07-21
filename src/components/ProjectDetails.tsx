@@ -1,21 +1,22 @@
 import { AddIcon, MinusIcon, WarningIcon } from "@chakra-ui/icons";
 import { Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { useTheme } from "../context/ThemeContext";
+import { useAuth } from "../context/AuthContext";
+import { useModal } from "../context/ModalContext";
 
 interface ProjectDetailsProps {
   project: any;
   isSmallerScreen: boolean;
-  openModal: (modal: string, projectId?: number, issueId?: number) => void;
-  selectedTheme: any;
-  userRole: string | undefined;
 }
 
 const ProjectDetails: React.FC<ProjectDetailsProps> = ({
   project,
   isSmallerScreen,
-  openModal,
-  selectedTheme,
-  userRole,
 }) => {
+  const { selectedTheme } = useTheme();
+  const { state } = useAuth();
+  const { openModal } = useModal();
+
   return (
     <>
       <Heading
@@ -35,7 +36,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
         {project.description}
       </Text>
 
-      {userRole !== "member" && (
+      {state?.user?.role !== "member" && (
         <Flex>
           <Button
             onClick={() => openModal("addUser")}
@@ -45,7 +46,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
             justifySelf='center'
             w='12rem'
             mx='auto'
-            size = {{ base: "sm", md: "md" }}
+            size={{ base: "sm", md: "md" }}
             boxShadow={{ base: "sm", md: "md" }}
             px='4'
           >
@@ -59,7 +60,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
             justifySelf='center'
             w='12rem'
             mx='auto'
-            size = {{ base: "sm", md: "md" }}
+            size={{ base: "sm", md: "md" }}
             boxShadow={{ base: "sm", md: "md" }}
             px='4'
           >

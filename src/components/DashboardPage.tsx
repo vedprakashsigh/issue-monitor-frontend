@@ -10,6 +10,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import MainSection from "./MainSection";
 import Sidebar from "./SideBar";
+import Loader from "./Loader";
 
 const DashboardPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -19,6 +20,7 @@ const DashboardPage: React.FC = () => {
   const { selectedTheme } = useTheme();
 
   useEffect(() => {
+    setTimeout(() => {}, 10000);
     const fetchUser = async () => {
       const user = await getCurrentUser();
       if (user) {
@@ -35,7 +37,7 @@ const DashboardPage: React.FC = () => {
   }, [dispatch, navigate, state.token]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (

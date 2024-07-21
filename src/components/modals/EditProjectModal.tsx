@@ -32,7 +32,7 @@ const EditProjectModal: React.FC = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const toast = useToast();
-  const { setSelectedProjectId } = useProject();
+  const { selectedProjectId, setSelectedProjectId, projects } = useProject();
   const { state } = useAuth();
   const { selectedTheme } = useTheme();
 
@@ -41,26 +41,14 @@ const EditProjectModal: React.FC = () => {
       if (!modals.editProject) {
         return;
       }
-      if (projectId) {
-        const response = await fetch(
-          `${config.apiUrl}/api/project?project_id=${projectId}&user_id=${state.user?.user_id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${state.token}`,
-            },
-          }
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setName(data.name);
-          setDescription(data.description);
-        }
-      }
+      const data = projects?.find(
+        (project) => project.id === selectedProjectId
+      );
+      setName(data?.name || "");
+      setDescription(data?.description || "");
     };
     fetchIssue();
-  }, [projectId]);
+  }, [selectedProjectId, state, projects]);
 
   const handleCloseModal = () => {
     setName("");
