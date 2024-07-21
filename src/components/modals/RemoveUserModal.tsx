@@ -68,7 +68,7 @@ const RemoveUserModal: React.FC = () => {
       }
     };
     fetchProjectMembers();
-  }, [selectedProjectId, state.token, modals]);
+  }, [selectedProjectId, state.token]);
 
   const handleRemoveUser = async () => {
     if (selectedUserId === null) return;
